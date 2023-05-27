@@ -13,12 +13,8 @@
   <div class="tab-bar">
     <van-tabbar v-model="currentIndex" active-color="#ff9854">
       <template v-for="(item, index) in tabbarData">
-        <van-tabbar-item :to="item.path">
+        <van-tabbar-item :to="item.path" icon="home-o">
           <span>{{ item.text }}</span>
-          <template #icon>
-            <img v-if="currentIndex !== index" :src="getAssetURL(item.image)">
-            <img v-else :src="getAssetURL(item.imageActive)">
-          </template>
         </van-tabbar-item>
       </template>
     </van-tabbar>
@@ -26,8 +22,17 @@
 </template>
 
 <style lang="less" scoped>
-  img {
-    height: 16px;
+  .tab-bar {
+    // 方式：在单独的component中修改
+    // --van-tabbar-item-font-size: 5.3333vw;
+    // 修改它的类:不会生效
+    // 因为组件有自己的作用域
+    // 如果需要穿透进去修改，需要使用deep()
+    ::v-deep(.van-tabbar-item__icon) {
+      font-size: 50px;
+    }
+
   }
+
 
 </style>
