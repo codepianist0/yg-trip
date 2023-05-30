@@ -2,8 +2,21 @@
   --primary-color: #ff9854;
   /* 方式1：全局修改它的属性 */
   /* --van-tabbar-item-font-size: 2.6667vw; */
+
+  /* 修改组件颜色 */
+  --van-search-left-icon-color: var(--primary-color) !important;
+  --van-index-bar-index-active-color: var(--primary-color) !important;
+  --van-index-anchor-sticky-text-color: var(--primary-color) !important;
 }
 
 body {
   font-size: 14px;
+}
+
+.top-page {
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 9;
+  background-color: #fff;
 }

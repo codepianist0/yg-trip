@@ -27,7 +27,7 @@
 
 <style lang="less" scoped>
   img {
-    height: 16px;
+    height: 26px;
   }
 
 </style>

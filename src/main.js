@@ -4,8 +4,8 @@ import App from './App.vue'
 import router from "./router"
 import pinia from "./stores"
 
-import "./assets/css/index.css"
 import "normalize.css"
+import "./assets/css/index.css"
 
 const app = createApp(App)
 app.use(pinia)
