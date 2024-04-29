@@ -2,6 +2,9 @@
 import axios from "axios"
 
 import { BASE_URL, TIMEOUT } from "./config"
+import useMainStore from "@/stores/modules/main"
+
+const mainStore = useMainStore()
 
 class YGrequest {
   // 设置构造函数
@@ -10,6 +13,22 @@ class YGrequest {
       baseURL,
       timeout
     })
+    // 创建请求拦截和响应拦截
+    this.instance.interceptors.request.use(config => {
+      mainStore.loadingFlag = true
+      return config
+    }, err => {
+      return err
+    }
+    )
+    this.instance.interceptors.response.use(ref => {
+      mainStore.loadingFlag = false
+      return ref
+    }, err => {
+      mainStore.loadingFlag = false
+      return err
+    }
+    )
   }
 
   request(config) {

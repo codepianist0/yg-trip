@@ -1,6 +1,5 @@
 import { defineStore } from "pinia"
 import {getCityAll} from "@/service"
-import { all } from "axios"
 
 const useCityStore = defineStore("city", {
   state: () => ({
@@ -8,6 +7,8 @@ const useCityStore = defineStore("city", {
     selectCity: {
       cityName: "玉林"
     },
+    fristHotCityFlag: true,
+    fristCityFlag: true
   }),
   actions: {
     fetchAllCtitieData() {

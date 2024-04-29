@@ -7,7 +7,10 @@
   
   // 获取网络数据
   const cityStore = useCityStore() 
-  cityStore.fetchAllCtitieData()
+  if (cityStore.fristCityFlag) {
+    cityStore.fetchAllCtitieData()
+    cityStore.fristCityFlag = false
+  }
 
   // 返回按钮
   const router = useRouter()
@@ -28,7 +31,8 @@
 
 
 <template>
-  <div class="city top-page">
+  <!-- <div class="city top-page"> -->
+  <div class="city">
     <div class="top">
       <!-- 搜索框 -->
       <form action="/">
@@ -41,7 +45,7 @@
         />
       </form>
       <!-- tabs -->
-      <van-tabs v-model:active="tabActive" animated color="#ff9854">
+      <van-tabs class="tab" v-model:active="tabActive" animated color="#ff9854">
         <template v-for="(value, key, index) in allCitys" :key="key">
           <van-tab :title="value.title" :name="key"></van-tab>
         </template>
@@ -58,6 +62,12 @@
 </template>
 
 <style lang="less" scoped>
+  .top {
+    .tab {
+      position: relative;
+      z-index: 9;
+    }
+  }
 
   .content {
     height: calc(100vh - 98px);

@@ -1,9 +1,12 @@
 <script setup>
+  import { useRoute } from "vue-router";
+  import { watch } from "vue";
+  
   import tabBar from "./components/tab-bar.vue"
+  import loading from "./components/loading/loading.vue";
+  
 
-  // import { useRoute } from "vue-router";
-
-  // const router = useRoute()
+  const router = useRoute()
 
 </script>
 
@@ -11,8 +14,8 @@
 <template>
   <div class="app">
     <router-view />
-    <!-- <tab-bar v-if="!router.meta.hideTabbar" /> -->
-    <tab-bar />
+    <tab-bar v-if="!router.meta.hideTabbar"/>
+    <loading />
   </div>
 </template>
 

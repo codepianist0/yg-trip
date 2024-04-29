@@ -1,15 +1,20 @@
 <script setup>
   import { useRouter } from "vue-router"
   import { computed, ref } from 'vue';
+  import { storeToRefs } from "pinia";
+  
+  import { formatMontDay, getDiffDays } from "@/utils/formatday"
   
   import getPosition from '@/utils/getPositon';
-  import { formatMontDay, getDiffDays } from "@/utils/formatday"
-
   import useCityStore from '@/stores/modules/city';
   import useHomeStore from "@/stores/modules/home"
-  import { storeToRefs } from "pinia";
+  import useDateStore from "@/stores/modules/date.js";
 
   const router = useRouter()
+  const cityStore = useCityStore()
+  const homeStore = useHomeStore()
+  const DateStore = useDateStore()
+
   // 获取当前位置
   function getPositionClick() {
     getPosition()
@@ -17,20 +22,20 @@
 
   // 点击切换到city
   function getCityClick() {
-    router.push("/city")
+    router.push({
+      path: "/city",
+    })
   }
 
   // 获取返回的数据
-  const cityStore = useCityStore()
   const currentCity = computed(() => cityStore.selectCity.cityName)
 
   // 获取格式化时间
-  let nowDate = new Date()
-  let newDate = new Date()
-  newDate.setDate(nowDate.getDate() + 1)
-  let startDay = ref(formatMontDay(nowDate))
-  let endDay = ref(formatMontDay(newDate))
-  let dateCount = ref(getDiffDays(nowDate, newDate))
+  const {nowDate, newDate, startDay, endDay, dayCount} = storeToRefs(DateStore)
+  startDay.value = formatMontDay(nowDate.value)
+  endDay.value = formatMontDay(newDate.value)
+  dayCount.value = getDiffDays(nowDate.value, newDate.value)
+
   // 选择日期
   const show = ref(false)
   function onConfirm(value) {
@@ -38,14 +43,30 @@
     const newDate = value[1]
     startDay.value = formatMontDay(value[0])
     endDay.value = formatMontDay(value[1])
-    dateCount = getDiffDays(nowDate, newDate)
+    dayCount.value = getDiffDays(nowDate, newDate)
     show.value = false
   }
 
   // 获取热门推荐城市
-  const homeStore = useHomeStore()
-  homeStore.getHotSuggestsData()
+  if (cityStore.fristHotCityFlag) {
+    homeStore.getHotSuggestsData()
+    cityStore.fristHotCityFlag = false
+  }
   const { hotSuggestsCity } = storeToRefs(homeStore)
+
+  // 点击搜索
+  function onsearchClick() {
+    router.push({
+      path: "/search",
+      query: {
+        nowDate,
+        newDate,
+        startDay: startDay.value,
+        endDay: endDay.value,
+        currentCity: currentCity.value
+      },
+    })
+  }
 
 </script>
 
@@ -66,7 +87,7 @@
         <span>入住</span>
         <div class="date">{{ startDay }}</div>
       </div>
-      <div class="range">共{{ dateCount }}晚</div>
+      <div class="range">共{{ dayCount }}晚</div>
       <div class="leave-day day-info">
         <span>离店</span>
         <div class="date">{{ endDay }}</div>
@@ -94,6 +115,11 @@
         <span class="hot-item">{{ item.tagText.text }}</span>
       </template>
     </div>
+    <!-- 搜索按钮 -->
+    <div class="search section" @click="onsearchClick">
+      <span class="btn" >开始搜索</span>
+    </div>
+    
 
   </div>
 </template>
@@ -167,12 +193,27 @@
       height: 20px;
       line-height: 1;
       padding: 4px 8px;
-      margin: 4px;
+      margin: 4px 5px;
       border-radius: 14px;
       box-sizing: border-box;
       font-size: 12px;
       background-color: rgba(255, 152, 84, .2) ;
     }
   }
+  .search {
+    align-items: center;
+    margin-top: 5px;
+    .btn {
+      flex: 1;
+      height: 38px;
+      border-radius: 22px;
+      text-align: center;
+      line-height: 38px;
+      color: #fff;
+      font-size: 18px;
+      background-image: linear-gradient(90deg, #fa8c1d, #fcaf3f);
+    }
+  }
+  
 
 </style>
